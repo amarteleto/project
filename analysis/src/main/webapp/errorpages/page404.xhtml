@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<ui:composition template="/resources/templates/_page.xhtml">
+	<ui:define name="body">
+		<div class="msg-erro">
+			<div class="msg-erro-icon inline">
+				<h:graphicImage library="images" name="icon-erro.jpg"></h:graphicImage>
+			</div>
+			<div class="msg-erro-tit inline txt-color1">Página não encontrada.</div>
+		</div>
+		<br />
+		<p:commandButton value="voltar" onclick="window.history.back()" />			
+		<div class="msg-erro-tecdetails txt-left">
+		<h2>Detalhes Técnicos:</h2>
+			<ul>
+				<li>Date/time: #{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}</li>
+				<li>User agent: #{header['user-agent']}</li>
+				<li>User IP: #{request.remoteAddr}</li>
+				<li>Request URI:
+					#{requestScope['javax.servlet.error.request_uri']}</li>
+				<li>Ajax request:
+					#{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}</li>
+				<li>Status code:
+					#{requestScope['javax.servlet.error.status_code']}</li>
+				<li>Exception type:
+					#{requestScope['javax.servlet.error.exception_type']}</li>
+				<li>Exception message:
+					#{requestScope['javax.servlet.error.message']}</li>
+			</ul>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

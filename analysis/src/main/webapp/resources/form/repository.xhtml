@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:of="http://omnifaces.org/functions"
+>
+	<cc:interface name="repositoryForm" componentType="form.RepositoryForm">
+		<cc:attribute name="id" required="false" type="java.lang.String"/>
+		<cc:attribute name="readonly" required="false" type="java.lang.Boolean"/>
+		<cc:attribute name="value" required="true" type="br.com.marteleto.project.analysis.model.RepositoryModel"/>
+	</cc:interface>
+	<cc:implementation>
+		<div id="#{cc.clientId}" class="form-main-panel">
+   			<h:panelGroup id="mainPanel" layout="block">
+	   			<p:panelGrid columnClasses="form-col-label,form-col-field" columns="2">
+					<p:outputLabel id="lbUrl" for="txUrl" value="#{cc.attrs.labelLbUrl}"/>
+					<p:inputText id="txUrl" value="#{cc.attrs.value.url}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+					<p:outputLabel id="lbUsername" for="txUsername" value="#{cc.attrs.labelLbUsername}"/>
+					<p:inputText id="txUsername" value="#{cc.attrs.value.username}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+					<p:outputLabel id="lbPassword" for="txPassword" value="#{cc.attrs.labelLbPassword}"/>
+					<p:inputText id="txPassword" value="#{cc.attrs.value.password}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+					<p:outputLabel id="lbLabelType" for="txLabelType" value="#{cc.attrs.labelLbLabelType}"/>
+					<p:selectOneRadio id="txLabelType" value="#{cc.attrs.value.labelType}" required="true" disabled="#{cc.attrs.readonly}">
+			            <f:selectItems value="#{cc.attrs.labelTypeOptions}" />
+			        </p:selectOneRadio>
+	   			</p:panelGrid>
+    		</h:panelGroup>
+   		</div>
+	</cc:implementation>
+</ui:composition>

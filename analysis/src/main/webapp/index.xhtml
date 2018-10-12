@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:form="http://java.sun.com/jsf/composite/form"
+>
+<ui:composition template="/resources/templates/_page.xhtml">
+	<ui:define name="body">
+		<f:event type="preRenderView" listener="#{indexController.preRenderView}"/>
+		<p:wizard flowListener="#{indexController.wizardFlowListener}" nextLabel="#{msgs.wizard_next}" backLabel="#{msgs.wizard_back}">
+	        <p:tab id="#{indexController.getTabName(1)}" title="#{msgs.wizard_tab_repository}">
+	            <p:panel header="#{msgs.wizard_tab_repository}">
+	                <form:repository value="#{indexController.model.repositoryModel}"/>
+	            </p:panel>
+	        </p:tab>
+	        <p:tab id="#{indexController.getTabName(2)}" title="#{msgs.wizard_tab_label}">
+	            <p:panel header="#{msgs.wizard_tab_label}">
+	                <form:label value="#{indexController.model.labelModel}" repositoryModel="#{indexController.model.repositoryModel}"/>
+	            </p:panel>
+	        </p:tab>
+	        <p:tab id="#{indexController.getTabName(3)}" title="#{msgs.wizard_tab_resume}">
+	            <p:panel id="pnResume" header="#{msgs.wizard_tab_resume}">
+					<form:report value="#{indexController.model}"/>
+	            </p:panel>
+	            <p:commandButton id="btFinalize" value="#{msgs.wizard_finalize}" actionListener="#{indexController.btFinalizeActionListener}" update="message" process="@this,pnResume" disabled="#{indexController.btFinalizeDisabled}"/>
+	        </p:tab>
+	    </p:wizard>
+	    <h:panelGrid columns="2">
+			<p:panel id="pnListProcess" header="#{msgs.panel_process}">
+				<p:dataTable var="thread" value="#{indexController.listProcess}">
+				    <p:column headerText="#{msgs.panel_process_name}">
+				        <h:outputText value="#{thread.name}" />
+				    </p:column>
+				    <p:column headerText="#{msgs.panel_process_progress}">
+				        <h:outputText value="#{thread.name}" />
+				    </p:column>
+				</p:dataTable>
+				<p:poll interval="3" update="pnListProcess" process="@this"/>
+			</p:panel>
+			<p:panel id="pnListReports" header="#{msgs.panel_report}">
+				relatórios
+			</p:panel>
+		</h:panelGrid>
+	</ui:define>
+</ui:composition>
+</html> 

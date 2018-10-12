@@ -1,0 +1,32 @@
+.ui-outputlabel-rfi {
+	color: #ff0000;
+}
+
+.column100 {
+	width: 100px;
+}
+
+.situation-label {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    font-size: 0.9em;
+    padding: 5px;
+}
+
+.dialog-loading {
+	background-color:rgba(0, 0, 0, 0);
+	box-shadow: none;
+	border: 0px none;
+}
+
+.dialog-loading > .ui-dialog-content {
+	background-color:rgba(0, 0, 0, 0);
+}
+
+.ui-messages {
+	z-index: 2000;
+	position: fixed;
+	top: -10px;
+	width: 99%;
+}

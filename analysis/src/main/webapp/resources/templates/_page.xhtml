@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+>
+<h:head>
+	<title>#{msgs.application_name}</title>
+</h:head>
+<h:body>
+	<h:form id="form">
+		<h:outputStylesheet library="style" name="application.css"/>
+		<h:outputScript library="script" name="application.js" target="head" />
+	 	<h:outputScript library="omnifaces" name="fixviewstate.js" target="head" />
+		<ui:insert name="body"/>
+		<p:confirmDialog id="confirmeDialog" global="true" width="360" closable="false" style="padding-bottom:20px;" styleClass="txt-center">
+			<p:commandButton id="btYes" value="${msgs.application_yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton id="btNo" value="${msgs.application_no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+		<p:ajaxStatus styleClass="situation-label">
+		    <f:facet name="default">
+		        <h:outputText value="#{msgs.application_situation}: #{msgs.application_situation_available}" />
+		    </f:facet>
+		    <f:facet name="start">
+		        <h:outputText value="#{msgs.application_situation}: #{msgs.application_situation_starting}" />
+		    </f:facet>
+		    <f:facet name="complete">
+		        <h:outputText value="#{msgs.application_situation}: #{msgs.application_situation_complete}" />
+		    </f:facet>
+		</p:ajaxStatus>
+		<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" styleClass="dialog-loading">
+		    <p:graphicImage library="images" name="/loading.gif" />
+		</p:dialog>
+		<p:messages id="message" showDetail="true" showSummary="false" autoUpdate="true" closable="true"/>
+	</h:form>
+</h:body>
+</html>

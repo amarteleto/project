@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:of="http://omnifaces.org/functions"
+>
+	<cc:interface name="labelForm" componentType="form.LabelForm">
+		<cc:attribute name="id" required="false" type="java.lang.String"/>
+		<cc:attribute name="readonly" required="false" type="java.lang.Boolean"/>
+		<cc:attribute name="value" required="true" type="br.com.marteleto.project.analysis.model.LabelModel"/>
+		<cc:attribute name="repositoryModel" required="true" type="br.com.marteleto.project.analysis.model.RepositoryModel"/>
+	</cc:interface>
+	<cc:implementation>
+		<div id="#{cc.clientId}" class="form-main-panel">
+   			<h:panelGroup id="mainPanel" layout="block">
+   				<p:outputLabel id="lbPom" for="txPom" value="#{cc.attrs.labelLbPom}"/>
+					<p:inputText id="txPom" value="#{cc.attrs.value.pom}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+   				<p:panelGrid columnClasses="form-col-label,form-col-field" columns="2">
+	   				<p:outputLabel for="chJarname" value="#{cc.attrs.labelLbJarName}" />
+   					<p:chips id="chJarname" value="#{cc.attrs.value.listJar}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}"/>
+   				</p:panelGrid>
+	   			<p:panelGrid columnClasses="form-col-label,form-col-field" columns="2">
+					<p:pickList id="plLabel" value="#{cc.attrs.labels}" var="label" effect="bounce" itemValue="#{label}" itemLabel="#{label}" showCheckbox="true" responsive="true" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" required="true" disabled="#{cc.attrs.readonly}">
+			        	<f:facet name="sourceCaption">#{cc.attrs.labelLbAvailable}</f:facet>
+			        	<f:facet name="targetCaption">#{cc.attrs.labelLbSelected}</f:facet>
+			        	<p:column>
+			            	<h:outputText value="#{label}" />
+			        	</p:column>
+			    	</p:pickList>
+	   			</p:panelGrid>
+    		</h:panelGroup>
+   		</div>
+	</cc:implementation>
+</ui:composition>

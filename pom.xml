@@ -1,0 +1,340 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+  	
+  	<groupId>br.com.marteleto</groupId>
+  	<artifactId>project</artifactId>
+  	<version>1.0</version>
+  	<packaging>pom</packaging>
+  	
+    <name>project</name>
+  	<description>project</description>
+	<url>https://github.com/amarteleto/project</url>
+	
+	<issueManagement>
+		<url>https://github.com/amarteleto/project/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	
+	<scm>
+		<url>https://github.com/amarteleto/project</url>
+		<connection>scm:git:git://github.com/amarteleto/project.git</connection>
+		<developerConnection>scm:git:git@github.com:amarteleto/project.git</developerConnection>
+	</scm>
+ 	
+  	<developers>
+		<developer>
+			<id>amarteleto</id>
+			<email>amarteleto@outlook.com</email>
+			<name>Anderson A. Marteleto</name>
+			<url>https://github.com/amarteleto</url>
+		</developer>
+	</developers>
+  	
+  	<modules>
+  		<module>analysis</module>
+	</modules>
+	
+	<properties>
+      	<maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <project.jacoco.report.path>${project.build.directory}</project.jacoco.report.path>
+        <project.jacoco.skip>false</project.jacoco.skip>
+        
+        <sonar.jacoco.reportPaths>${project.jacoco.report.path}/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.junit.reportPaths>${project.jacoco.report.path}/reports</sonar.junit.reportPaths>
+        <sonar.surefire.reportsPath>${project.jacoco.report.path}/reports</sonar.surefire.reportsPath>
+        <sonar.failsafe.reportsPath>${project.jacoco.report.path}/reports</sonar.failsafe.reportsPath>
+    </properties>
+    
+    <build>
+    	<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<pluginManagement>
+        	<plugins>
+          		<plugin>
+            		<groupId>org.apache.maven.plugins</groupId>
+            		<artifactId>maven-compiler-plugin</artifactId>
+            		<version>3.7.0</version>
+            		<configuration>
+              			<source>${maven.compiler.source}</source>
+              			<target>${maven.compiler.target}</target>
+            		</configuration>
+          		</plugin>
+          		<plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+	                <version>3.0.2</version>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+        	</plugins>
+      	</pluginManagement>
+      	<plugins>
+      		<plugin>
+        		<groupId>org.jacoco</groupId>
+        		<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.1</version>
+        		<executions>
+                     <execution>
+                		<id>jacoco-pre-unit-test</id>
+                		<goals>
+                    		<goal>prepare-agent</goal>
+                		</goals>
+                		<configuration>
+                			<append>true</append>
+                    		<propertyName>surefireArgLine</propertyName>
+                    		<destFile>${sonar.jacoco.reportPaths}</destFile>
+                		</configuration>
+            		</execution>
+            		<execution>
+                		<id>jacoco-post-unit-test</id>
+                		<phase>test</phase>
+                		<goals>
+                    		<goal>report</goal>
+                		</goals>
+                		<configuration>
+                			<append>true</append>
+                    		<destFile>${sonar.jacoco.reportPaths}</destFile>
+                		</configuration>
+            		</execution>
+            		<execution>
+                		<id>jacoco-pre-integration-test</id>
+                		<phase>pre-integration-test</phase>
+                		<goals>
+                    		<goal>prepare-agent</goal>
+                		</goals>
+                		<configuration>
+                			<append>true</append>
+                    		<propertyName>failsafeArgLine</propertyName>
+                    		<destFile>${sonar.jacoco.reportPaths}</destFile>
+                		</configuration>
+            		</execution>
+            		<execution>
+                		<id>jacoco-post-integration-test</id>
+                		<phase>post-integration-test</phase>
+                		<goals>
+                    		<goal>report</goal>
+                		</goals>
+                		<configuration>
+                			<append>true</append>
+                    		<destFile>${sonar.jacoco.reportPaths}</destFile>
+                		</configuration>
+            		</execution>
+        		</executions>
+    		</plugin>
+    		<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-surefire-plugin</artifactId>
+        		<version>2.21.0</version>
+        		<configuration>
+            		<argLine>${surefireArgLine}</argLine>
+            		<reportsDirectory>${sonar.surefire.reportsPath}</reportsDirectory>
+        		</configuration>
+    		</plugin>
+    		<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-failsafe-plugin</artifactId>
+        		<version>2.21.0</version>
+        		<executions>
+            		<execution>
+                		<id>integration-tests</id>
+                		<goals>
+                    		<goal>integration-test</goal>
+                    		<goal>verify</goal>
+                		</goals>
+                		<configuration>
+                    		<argLine>${failsafeArgLine}</argLine>
+                    		<summaryFile>${sonar.failsafe.reportsPath}/failsafe-summary.xml</summaryFile>
+                		</configuration>
+            		</execution>
+        		</executions>
+    		</plugin>
+    		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<configuration>
+					<skip>${project.jacoco.skip}</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="Generating JaCoCo Reports" />
+								<taskdef name="report" classname="org.jacoco.ant.ReportTask">
+									<classpath path="${project.build.directory}/jacoco-jars/org.jacoco.ant.jar" />
+								</taskdef>
+								<mkdir dir="${project.reporting.outputDirectory}/jacoco" />
+								<report>
+									<executiondata>
+										<fileset dir="${project.build.directory}">
+											<include name="jacoco.exec" />
+										</fileset>
+									</executiondata>
+									<structure name="jacoco-multi Coverage Project">
+										<group name="jacoco-multi">
+											<classfiles>
+												<fileset dir="${project.basedir}">
+													<include name="**/target/classes/**"/>
+												</fileset>
+											</classfiles>
+											<sourcefiles encoding="UTF-8">
+												<fileset dir="${project.basedir}">
+													<include name="**/src/main/java/**"/>
+												</fileset>
+											</sourcefiles>
+										</group>
+									</structure>
+									<html destdir="${project.reporting.outputDirectory}/jacoco" />
+									<xml destfile="${project.reporting.outputDirectory}/jacoco/jacoco.xml" />
+									<csv destfile="${project.reporting.outputDirectory}/jacoco/jacoco.csv" />
+								</report>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jacoco</groupId>
+						<artifactId>org.jacoco.ant</artifactId>
+						<version>0.8.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+      	</plugins>
+    </build>
+    
+    <dependencies>
+		<!-- TEST Dependency -->
+    	<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.12</version>
+		    <scope>test</scope>
+		    <exclusions>
+				<exclusion>
+					<groupId>org.hamcrest</groupId>
+					<artifactId>hamcrest-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	    <dependency>
+			<groupId>org.mockito</groupId>
+	      	<artifactId>mockito-core</artifactId>
+	      	<version>2.18.3</version>
+	      	<scope>test</scope>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.hamcrest</groupId>
+		    <artifactId>hamcrest-library</artifactId>
+		    <version>1.3</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-log4j12</artifactId>
+		    <version>1.5.6</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- PROVIDER Dependency -->
+        <dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>8.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>2.0.SP1</version>
+			<scope>provided</scope>
+		</dependency>
+    </dependencies>
+    
+    <distributionManagement>
+  		<repository>
+    		<id>bintray</id>
+    		<url>https://api.bintray.com/maven/amarteleto/maven-repo/coursera/;publish=1</url>
+  		</repository>
+	</distributionManagement>
+	
+	<repositories>
+  		<repository>
+    		<id>bintray</id>
+    		<url>http://dl.bintray.com/amarteleto/maven-repo</url>
+    		<releases>
+      			<enabled>true</enabled>
+    		</releases>
+    		<snapshots>
+      			<enabled>true</enabled>
+    		</snapshots>
+  		</repository>
+	</repositories>
+	
+	<profiles>
+  		<profile>
+    		<id>release</id>
+    		<build>
+      			<plugins>
+      				<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+					    <artifactId>maven-release-plugin</artifactId>
+					    <version>2.5.3</version>
+				      	<configuration>
+				        	<useReleaseProfile>false</useReleaseProfile>
+				        	<releaseProfiles>release</releaseProfiles>
+				        	<autoVersionSubmodules>true</autoVersionSubmodules>
+				      	</configuration>
+				      	<dependencies>
+					        <dependency>
+					            <groupId>org.apache.maven.scm</groupId>
+					            <artifactId>maven-scm-provider-gitexe</artifactId>
+					            <version>1.9.5</version>
+					        </dependency>
+					        <dependency>
+					            <groupId>org.apache.maven.scm</groupId>
+					            <artifactId>maven-scm-api</artifactId>
+					            <version>1.9.5</version>
+					        </dependency>
+					    </dependencies>
+				    </plugin>
+      				<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+		                    <execution>
+		                        <id>attach-sources</id>
+		                        <goals>
+		                            <goal>jar</goal>
+		                        </goals>
+		                    </execution>
+		                </executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.4</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+      			</plugins>
+    		</build>
+  		</profile>
+	</profiles>
+</project>

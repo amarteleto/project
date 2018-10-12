@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:form="http://java.sun.com/jsf/composite/form"
+>
+	<cc:interface name="reportForm" componentType="form.ReportForm">
+		<cc:attribute name="id" required="false" type="java.lang.String"/>
+		<cc:attribute name="readonly" required="false" type="java.lang.Boolean"/>
+		<cc:attribute name="value" required="true" type="br.com.marteleto.project.analysis.model.ReportModel"/>
+	</cc:interface>
+	<cc:implementation>
+		<div id="#{cc.clientId}" class="form-main-panel">
+   			<h:panelGroup id="mainPanel" layout="block">
+	   			<p:panelGrid columnClasses="form-col-label,form-col-field" columns="2">
+					<p:outputLabel id="lbName" for="txName" value="#{cc.attrs.labelLbName}"/>
+					<p:inputText id="txName" value="#{cc.attrs.value.name}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+	   			</p:panelGrid>
+	   			<form:repository value="#{cc.attrs.value.repositoryModel}" readonly="true"/>
+				<form:label value="#{cc.attrs.value.labelModel}" repositoryModel="#{cc.attrs.value.repositoryModel}" readonly="true"/>
+    		</h:panelGroup>
+   		</div>
+	</cc:implementation>
+</ui:composition>
