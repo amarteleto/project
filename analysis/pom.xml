@@ -42,6 +42,12 @@
 		    <artifactId>svnkit</artifactId>
 		    <version>1.9.3</version>
 		</dependency>
+		<!-- GIT -->
+		<dependency>
+		    <groupId>org.eclipse.jgit</groupId>
+		    <artifactId>org.eclipse.jgit</artifactId>
+		    <version>5.1.2.201810061102-r</version>
+		</dependency>
 		<!-- JSF -->
 		<dependency>
 		    <groupId>com.sun.faces</groupId>
