@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PropertyUtil implements Serializable {
@@ -36,7 +37,7 @@ public class PropertyUtil implements Serializable {
 		}
 		properties.load(is);
 		is.close();
-		log.info("File: " + propsName + " loaded successfully.");
+		log.log(Level.INFO, "File: {0} loaded successfully.", propsName);
     }
     
     private static InputStream loadPropertyInApplicationConfDir(String propsName) throws FileNotFoundException {

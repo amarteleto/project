@@ -6,7 +6,12 @@ import java.util.Set;
 import javax.faces.component.FacesComponent;
 import javax.faces.model.SelectItem;
 
+import br.com.marteleto.project.analysis.model.RepositoryModel;
 import br.com.marteleto.project.analysis.model.type.LabelType;
+import br.com.marteleto.project.analysis.model.type.RepositoryType;
+import br.com.marteleto.project.analysis.util.FacesUtil;
+import br.com.marteleto.project.analysis.util.ResourceUtil;
+import br.com.marteleto.project.analysis.util.SubversionUtil;
 
 @FacesComponent(value=RepositoryForm.COMPONENT_TYPE)
 public class RepositoryForm extends AInput {
@@ -19,6 +24,8 @@ public class RepositoryForm extends AInput {
 		labelLbUsername,
 		labelLbPassword,
 		labelLbLabelType,
+		labelLbRepositoryType,
+		labelLbLabel,
 	}
 	
 	public boolean isReadonly() {
@@ -51,17 +58,86 @@ public class RepositoryForm extends AInput {
 	public void setLabelLbLabelType(String labelLbLabelType) {
 		getStateHelper().put(PropertyKeys.labelLbLabelType, labelLbLabelType);
 	}
+	public String getLabelLbRepositoryType() {
+		return (String) getStateHelper().eval(PropertyKeys.labelLbRepositoryType,this.getResourceBundleMap().get("labelLbRepositoryType"));
+	}
+	public void setLabelLbRepositoryType(String labelLbRepositoryType) {
+		getStateHelper().put(PropertyKeys.labelLbRepositoryType, labelLbRepositoryType);
+	}
+	public String getLabelLbLabel() {
+		return (String) getStateHelper().eval(PropertyKeys.labelLbLabel,this.getResourceBundleMap().get("labelLbLabel"));
+	}
+	public void setLabelLbLabel(String labelLbLabel) {
+		getStateHelper().put(PropertyKeys.labelLbLabel, labelLbLabel);
+	}
+	
+	@Override
+	public RepositoryModel getValue() {
+		return (RepositoryModel) super.getValue();
+	}
+	
+	public void cbLabelTypeListener() {
+		this.getValue().setLabel(null);
+	}
 	
 	public Set<SelectItem> getLabelTypeOptions() {
 		Set<SelectItem> items = new LinkedHashSet<>();
 		SelectItem selectItem = new SelectItem();
-		selectItem.setLabel(LabelType.BRANCH.getDescription());
+		selectItem.setLabel(ResourceUtil.getResource("repository_label_type_" + LabelType.TRUNK.getDescription()));
+		selectItem.setValue(LabelType.TRUNK);
+		items.add(selectItem);
+		selectItem = new SelectItem();
+		selectItem.setLabel(ResourceUtil.getResource("repository_label_type_" + LabelType.BRANCH.getDescription()));
 		selectItem.setValue(LabelType.BRANCH);
 		items.add(selectItem);
 		selectItem = new SelectItem();
-		selectItem.setLabel(LabelType.TAG.getDescription());
+		selectItem.setLabel(ResourceUtil.getResource("repository_label_type_" + LabelType.TAG.getDescription()));
 		selectItem.setValue(LabelType.TAG);
 		items.add(selectItem);
+		return items;
+	}
+	
+	public Set<SelectItem> getRepositoryTypeOptions() {
+		Set<SelectItem> items = new LinkedHashSet<>();
+		SelectItem selectItem = new SelectItem();
+		selectItem.setLabel(ResourceUtil.getResource("repository_type_" + RepositoryType.SUBVERSION.getDescription()));
+		selectItem.setValue(RepositoryType.SUBVERSION);
+		items.add(selectItem);
+		selectItem = new SelectItem();
+		selectItem.setLabel(ResourceUtil.getResource("repository_type_" + RepositoryType.GIT.getDescription()));
+		selectItem.setValue(RepositoryType.GIT);
+		items.add(selectItem);
+		return items;
+	}
+	
+	public Set<SelectItem> getRepositoryLabelOptions() {
+    	SelectItem selectItem;
+    	Set<SelectItem> items = new LinkedHashSet<>();
+    	if (!this.isReadonly() && !this.getValue().getLabelType().equals(LabelType.TRUNK)) {
+    		try {
+    			Set<String> labels = SubversionUtil.listLabelEntries(this.getValue().getUrl(), this.getValue().getUsername(), this.getValue().getPassword(),this.getValue().getLabelType().getDescription());
+    			if (!labels.isEmpty()) {
+    				for (String label : labels) {
+    					selectItem = new SelectItem();
+    					selectItem.setLabel(label);
+    					selectItem.setValue(label);
+    					items.add(selectItem);
+    				}
+    			}
+    		} catch (Exception ex) {
+    			FacesUtil.exceptionProcess(ex);
+    		}
+		} else {
+			selectItem = new SelectItem();
+			if (this.getValue().getLabelType().equals(LabelType.TRUNK)) {
+				selectItem.setLabel(ResourceUtil.getResource("repository_label_type_" + LabelType.TRUNK.getDescription()));
+				selectItem.setValue(LabelType.TRUNK.getDescription());
+			} else {
+				selectItem.setLabel(this.getValue().getLabel());
+				selectItem.setValue(this.getValue().getLabel());
+			}
+			items.add(selectItem);
+		}
 		return items;
 	}
 }

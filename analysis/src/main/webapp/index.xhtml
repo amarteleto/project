@@ -8,40 +8,60 @@
 <ui:composition template="/resources/templates/_page.xhtml">
 	<ui:define name="body">
 		<f:event type="preRenderView" listener="#{indexController.preRenderView}"/>
-		<p:wizard flowListener="#{indexController.wizardFlowListener}" nextLabel="#{msgs.wizard_next}" backLabel="#{msgs.wizard_back}">
-	        <p:tab id="#{indexController.getTabName(1)}" title="#{msgs.wizard_tab_repository}">
-	            <p:panel header="#{msgs.wizard_tab_repository}">
-	                <form:repository value="#{indexController.model.repositoryModel}"/>
-	            </p:panel>
-	        </p:tab>
-	        <p:tab id="#{indexController.getTabName(2)}" title="#{msgs.wizard_tab_label}">
-	            <p:panel header="#{msgs.wizard_tab_label}">
-	                <form:label value="#{indexController.model.labelModel}" repositoryModel="#{indexController.model.repositoryModel}"/>
-	            </p:panel>
-	        </p:tab>
-	        <p:tab id="#{indexController.getTabName(3)}" title="#{msgs.wizard_tab_resume}">
-	            <p:panel id="pnResume" header="#{msgs.wizard_tab_resume}">
-					<form:report value="#{indexController.model}"/>
-	            </p:panel>
-	            <p:commandButton id="btFinalize" value="#{msgs.wizard_finalize}" actionListener="#{indexController.btFinalizeActionListener}" update="message" process="@this,pnResume" disabled="#{indexController.btFinalizeDisabled}"/>
-	        </p:tab>
-	    </p:wizard>
-	    <h:panelGrid columns="2">
-			<p:panel id="pnListProcess" header="#{msgs.panel_process}">
-				<p:dataTable var="thread" value="#{indexController.listProcess}">
-				    <p:column headerText="#{msgs.panel_process_name}">
-				        <h:outputText value="#{thread.name}" />
-				    </p:column>
-				    <p:column headerText="#{msgs.panel_process_progress}">
-				        <h:outputText value="#{thread.name}" />
-				    </p:column>
-				</p:dataTable>
-				<p:poll interval="3" update="pnListProcess" process="@this"/>
-			</p:panel>
-			<p:panel id="pnListReports" header="#{msgs.panel_report}">
-				relatórios
-			</p:panel>
-		</h:panelGrid>
+		<p:tabView id="tabPrincipal" activeIndex="#{indexController.tabActiveIndex}">
+        	<p:tab title="#{msgs.tab_wizard}">
+        		<p:wizard flowListener="#{indexController.wizardFlowListener}" nextLabel="#{msgs.wizard_next}" backLabel="#{msgs.wizard_back}">
+			        <p:tab id="#{indexController.getTabName(1)}" title="#{msgs.wizard_tab_repository}">
+			            <p:panel header="#{msgs.wizard_tab_repository}">
+			                <form:repository value="#{indexController.model.repositoryModel}"/>
+			            </p:panel>
+			        </p:tab>
+			        <p:tab id="#{indexController.getTabName(2)}" title="#{msgs.wizard_tab_resume}">
+			            <p:panel id="pnResume" header="#{msgs.wizard_tab_resume}">
+							<form:report value="#{indexController.model}"/>
+							<p:commandButton id="btFinalize" value="#{msgs.wizard_finalize}" actionListener="#{indexController.btFinalizeActionListener}" update="tabPrincipal" process="@this,pnResume" disabled="#{indexController.btFinalizeDisabled}"/>
+			            </p:panel>
+			        </p:tab>
+			    </p:wizard>
+			</p:tab>
+			<p:tab title="#{msgs.tab_progress}">
+				<h:panelGroup id="pnTabProgress">
+					<h:panelGrid id="pnAutoUpdate" columns="2">
+	        			<p:selectBooleanCheckbox id="sbAutoUpdate" value="#{indexController.autoUpdate}" onLabel="#{msgs.application_yes}" offLabel="#{msgs.application_no}">
+	        				<p:ajax process="pnAutoUpdate" update="pnTabProgress"/>
+	        			</p:selectBooleanCheckbox>
+	        			<p:outputLabel value="#{msgs.panel_process_auto_update}" for="sbAutoUpdate"/>
+	        			<p:poll id="poAutoUpdate" interval="5" update="pnTabProgress" process="@this" autoStart="#{indexController.poAutoUpdateAutoStart}"/>
+	        		</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="columnPnProgress,columnPnProgress">
+						<p:panel id="pnListProcess" header="#{msgs.panel_process}" styleClass="pnListProcess">
+							<p:dataTable var="item" value="#{indexController.listProcess}" scrollable="true" scrollHeight="150">
+							    <p:column headerText="#{msgs.panel_process_name}" style="width:300px; text-align:left;">
+							        <h:outputText value="#{item.name}" />
+							    </p:column>
+							    <p:column headerText="#{msgs.panel_process_progress}" style="width:100px; text-align:center;">
+							        <p:progressBar value="#{item.progress}" labelTemplate="{value}%" styleClass="animated"/>
+							    </p:column>
+							    <p:column headerText="#{msgs.panel_process_options}" style="width:150px; text-align:center;">
+								    <p:commandButton id="btCancel" process="@this" update=":form:tabPrincipal:pnTabProgress" value="#{msgs.panel_process_cancel}" icon="ui-icon-close" actionListener="#{indexController.btCancelActionListener(item)}"/>
+    							</p:column>
+							</p:dataTable>
+						</p:panel>
+						<p:panel id="pnListReports" header="#{msgs.panel_report}" styleClass="pnListReports">
+							<p:dataTable var="item" value="#{indexController.listReport}" scrollable="true" scrollHeight="150">
+							    <p:column headerText="#{msgs.panel_report_name}" style="width:350px; text-align:left;">
+							        <h:outputText value="#{item.name}" />
+							    </p:column>
+							    <p:column headerText="#{msgs.panel_report_options}" style="width:250px; text-align:center;">
+								    <p:commandButton id="btDownload" immediate="true" process="@this" update="@this" ajax="false" value="#{msgs.panel_report_download}" icon="ui-icon-arrowthick-1-s" actionListener="#{indexController.btDownloadActionListener(item.name)}"/>
+								    <p:commandButton id="btDelete" process="@this" update=":form:tabPrincipal:pnTabProgress" value="#{msgs.panel_report_remove}" icon="ui-icon-close" actionListener="#{indexController.btDeleteActionListener(item.name)}"/>
+    							</p:column>
+							</p:dataTable>
+						</p:panel>
+					</h:panelGrid>
+				</h:panelGroup>
+			</p:tab>
+    	</p:tabView>
 	</ui:define>
 </ui:composition>
 </html> 

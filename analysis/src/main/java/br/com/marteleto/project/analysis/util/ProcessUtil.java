@@ -13,7 +13,7 @@ public class ProcessUtil implements Serializable {
 	private static final String RUNNING_COMMAND = "running command: {0} {1} {2}";
 	private static final String OS = System.getProperty("os.name").toLowerCase();
 	
-	public static String executeCommand(String command) throws IOException, InterruptedException {
+	public static String executeCommand(String command, boolean showLog) throws IOException, InterruptedException {
 		if (command != null && !"".equals(command.trim())) {
 			String[] parameters = new String[3];
 		    if (isWindows()) {
@@ -28,7 +28,7 @@ public class ProcessUtil implements Serializable {
 		    	throw new IllegalArgumentException("Operating system not mapped.");
 		    }
 		    log.log(Level.INFO,RUNNING_COMMAND,parameters);
-			StringBuffer output = new StringBuffer();
+			StringBuilder output = new StringBuilder();
 			ProcessBuilder pb = new ProcessBuilder(parameters);
 			pb.redirectErrorStream(true);
 			Process process = pb.start();
@@ -36,6 +36,9 @@ public class ProcessUtil implements Serializable {
 			String line = "";			
 			while ((line = reader.readLine())!= null) {
 				output.append(line + "\n");
+				if (showLog) {
+					log.log(Level.INFO,line);
+				}
 			}
 			int result = process.waitFor();
 			if (result == 1) {

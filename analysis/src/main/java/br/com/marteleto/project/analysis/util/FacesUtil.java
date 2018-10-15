@@ -127,6 +127,6 @@ public class FacesUtil implements Serializable {
 			message = "falha_nao_mapeada";
 		}
 		FacesUtil.showMessageError(null, message);
-		log.log(Level.SEVERE, ex.getMessage(), ex);
+		log.log(Level.SEVERE, message, ex);
 	}
 }

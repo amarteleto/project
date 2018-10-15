@@ -20,12 +20,20 @@
 	<cc:implementation>
 		<div id="#{cc.clientId}" class="form-main-panel">
    			<h:panelGroup id="mainPanel" layout="block">
-	   			<p:panelGrid columnClasses="form-col-label,form-col-field" columns="2">
-					<p:outputLabel id="lbName" for="txName" value="#{cc.attrs.labelLbName}"/>
-					<p:inputText id="txName" value="#{cc.attrs.value.name}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+	   			<p:panelGrid id="pnOptions" columnClasses="form-col-label,form-col-field" columns="2">
+					<p:outputLabel id="lbReportType" for="txReportType" value="#{cc.attrs.labelLbReportType}"/>
+					<p:selectOneRadio id="txReportType" value="#{cc.attrs.value.reportType}" required="true" disabled="#{cc.attrs.readonly}">
+			            <f:selectItems value="#{cc.attrs.reportTypeOptions}" />
+			            <p:ajax process="@this" update="pnOptions"/>
+			        </p:selectOneRadio>
+			        <p:outputLabel id="lbPom" for="txPom" value="#{cc.attrs.labelLbPom}" rendered="#{cc.attrs.analysisFieldsRendered}"/>
+					<p:inputText id="txPom" value="#{cc.attrs.value.pom}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" rendered="#{cc.attrs.analysisFieldsRendered}" styleClass="form-inputtext"/>
+	   				<p:outputLabel for="chJarname" value="#{cc.attrs.labelLbJarName}" rendered="#{cc.attrs.analysisFieldsRendered}"/>
+   					<p:chips id="chJarname" value="#{cc.attrs.value.listJar}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" rendered="#{cc.attrs.analysisFieldsRendered}"/>
+   					<p:outputLabel id="lbPackagePath" for="txPackagePath" value="#{cc.attrs.labelLbPackagePath}" rendered="#{cc.attrs.analysisFieldsRendered}"/>
+					<p:inputText id="txPackagePath" value="#{cc.attrs.value.packagePath}" required="false" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" rendered="#{cc.attrs.analysisFieldsRendered}" styleClass="form-inputtext"/>
 	   			</p:panelGrid>
 	   			<form:repository value="#{cc.attrs.value.repositoryModel}" readonly="true"/>
-				<form:label value="#{cc.attrs.value.labelModel}" repositoryModel="#{cc.attrs.value.repositoryModel}" readonly="true"/>
     		</h:panelGroup>
    		</div>
 	</cc:implementation>

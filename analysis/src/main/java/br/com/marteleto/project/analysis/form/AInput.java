@@ -32,7 +32,8 @@ public abstract class AInput extends UIInput implements NamingContainer, Seriali
 		super.encodeBegin(context);
 	}
 
-	public void processComponent(FacesContext context) throws Exception {
+	public void processComponent(FacesContext context) {
+		context.getCurrentPhaseId();
 		log.log(Level.INFO, "{0} processComponent", this.getId());
 	}
 }

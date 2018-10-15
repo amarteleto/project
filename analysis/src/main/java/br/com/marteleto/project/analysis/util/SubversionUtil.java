@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.tmatesoft.svn.core.SVNDepth;
@@ -29,7 +31,6 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 @SuppressWarnings("rawtypes")
 public class SubversionUtil implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final String newLine = "\r\n";
 	
 	public static void checkout(String url, String username, String password, String destPath) throws SVNException, IOException {
 		SVNRepository repository = getRepository(url, username, password);
@@ -41,14 +42,9 @@ public class SubversionUtil implements Serializable {
 		return listAllEntries(repository,"");
 	}
 	
-	public static Set<String> listTagsEntries(String url, String username, String password) throws SVNException, IOException {
+	public static Set<String> listLabelEntries(String url, String username, String password, String label) throws SVNException, IOException {
 		SVNRepository repository = getRepository(url, username, password);
-		return listDirEntries(repository,"/tags");
-	}
-	
-	public static Set<String> listBranchesEntries(String url, String username, String password) throws SVNException, IOException {
-		SVNRepository repository = getRepository(url, username, password);
-		return listDirEntries(repository,"/branches");
+		return listDirEntries(repository,label);
 	}
 	
 	public static Set<String> listLogEntries(String url, String username, String password) throws SVNException, IOException {
@@ -101,22 +97,16 @@ public class SubversionUtil implements Serializable {
         long endRevision = repository.getLatestRevision();
 		Collection logEntries = repository.log(new String[] {""}, null, startRevision, endRevision, true, true);
 		for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
-			StringBuilder log = new StringBuilder();
-            SVNLogEntry logEntry = (SVNLogEntry) entries.next();
-            log.append("------------------------------------------------------------------------");
-            log.append(newLine + "r" + logEntry.getRevision() + " | " + logEntry.getAuthor() + " | " + DateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss Z (E, dd MMM yyyy)",logEntry.getDate()) + " | " + countLines(logEntry.getMessage()) + " lines");
-            if (logEntry.getChangedPaths().size() > 0) {
-            	log.append(newLine + "Changed paths:");
+			SVNLogEntry logEntry = (SVNLogEntry) entries.next();
+			Map<String, String> files = new HashMap<>();
+			if (logEntry.getChangedPaths().size() > 0) {
 				Set changedPathsSet = logEntry.getChangedPaths().keySet();
                 for (Iterator changedPaths = changedPathsSet.iterator(); changedPaths.hasNext();) {
-                    SVNLogEntryPath entryPath = (SVNLogEntryPath) logEntry.getChangedPaths().get(changedPaths.next());
-                    log.append(newLine + "   " + entryPath.getType() + " " + entryPath.getPath() + ((entryPath.getCopyPath() != null) ? " (from " + entryPath.getCopyPath() + " revision " + entryPath.getCopyRevision() + ")" : ""));
+                    SVNLogEntryPath entryPath = logEntry.getChangedPaths().get(changedPaths.next());
+                    files.put(entryPath.getPath(), String.valueOf(entryPath.getType()));
                 }
             }
-            log.append(newLine + "");
-            log.append(newLine + logEntry.getMessage());
-            log.append(newLine + "");
-            logs.add(log.toString());
+			logs.add(RepositoryUtil.createRepositoryLog(logEntry.getRevision(), logEntry.getAuthor(), logEntry.getDate(), logEntry.getMessage(), files));
         }
 		return logs;
 	}
@@ -129,19 +119,8 @@ public class SubversionUtil implements Serializable {
 	}
 	
 	private static void setupLibrary() {
-        //For using over http:// and https://
         DAVRepositoryFactory.setup();
-        //For using over svn:// and svn+xxx://
         SVNRepositoryFactoryImpl.setup();
-        //For using over file:///
         FSRepositoryFactory.setup();
     }
-
-	private static int countLines(String str){
-		if (str != null && !"".equals(str.trim())) {
-			String[] lines = str.split("\r\n|\r|\n");
-			return  lines.length;
-		}
-		return 1;
-	}
 }

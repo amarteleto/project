@@ -20,16 +20,25 @@
 		<div id="#{cc.clientId}" class="form-main-panel">
    			<h:panelGroup id="mainPanel" layout="block">
 	   			<p:panelGrid columnClasses="form-col-label,form-col-field" columns="2">
+	   				<p:outputLabel id="lbRepositoryType" for="txRepositoryType" value="#{cc.attrs.labelLbRepositoryType}"/>
+					<p:selectOneRadio id="txRepositoryType" value="#{cc.attrs.value.repositoryType}" required="true" disabled="#{cc.attrs.readonly}">
+			            <f:selectItems value="#{cc.attrs.repositoryTypeOptions}" />
+			        </p:selectOneRadio>
 					<p:outputLabel id="lbUrl" for="txUrl" value="#{cc.attrs.labelLbUrl}"/>
-					<p:inputText id="txUrl" value="#{cc.attrs.value.url}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+					<p:inputText id="txUrl" value="#{cc.attrs.value.url}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext" autocomplete="true"/>
 					<p:outputLabel id="lbUsername" for="txUsername" value="#{cc.attrs.labelLbUsername}"/>
 					<p:inputText id="txUsername" value="#{cc.attrs.value.username}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
 					<p:outputLabel id="lbPassword" for="txPassword" value="#{cc.attrs.labelLbPassword}"/>
-					<p:inputText id="txPassword" value="#{cc.attrs.value.password}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
-					<p:outputLabel id="lbLabelType" for="txLabelType" value="#{cc.attrs.labelLbLabelType}"/>
-					<p:selectOneRadio id="txLabelType" value="#{cc.attrs.value.labelType}" required="true" disabled="#{cc.attrs.readonly}">
+					<p:password id="txPassword" value="#{cc.attrs.value.password}" required="true" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.readonly}" styleClass="form-inputtext"/>
+					<p:outputLabel id="lbLabelType" for="cbLabelType" value="#{cc.attrs.labelLbLabelType}"/>
+					<p:selectOneRadio id="cbLabelType" value="#{cc.attrs.value.labelType}" required="true" disabled="#{cc.attrs.readonly}">
 			            <f:selectItems value="#{cc.attrs.labelTypeOptions}" />
+			            <p:ajax process="mainPanel" update="mainPanel" listener="#{cc.cbLabelTypeListener}"/>
 			        </p:selectOneRadio>
+			        <p:outputLabel for="cbLabel" value="#{cc.attrs.labelLbLabel}" />
+			        <p:selectOneMenu id="cbLabel" value="#{cc.attrs.value.label}" required="true" disabled="#{cc.attrs.readonly}">
+			            <f:selectItems value="#{cc.attrs.repositoryLabelOptions}" />
+			        </p:selectOneMenu>
 	   			</p:panelGrid>
     		</h:panelGroup>
    		</div>

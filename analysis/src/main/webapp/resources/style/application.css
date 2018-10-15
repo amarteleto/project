@@ -7,9 +7,7 @@
 }
 
 .situation-label {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
+    float: right;
     font-size: 0.9em;
     padding: 5px;
 }
@@ -29,4 +27,22 @@
 	position: fixed;
 	top: -10px;
 	width: 99%;
+}
+
+.pnListProcess, .pnListReports {
+	
+}
+
+.form-col-label {
+	width: 200px;
+	text-align: right;
+}
+
+.form-col-field {
+	width: 500px;
+	text-align: left;
+}
+
+.columnPnProgress {
+	vertical-align: top;
 }

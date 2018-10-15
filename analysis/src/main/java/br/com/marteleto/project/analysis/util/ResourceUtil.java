@@ -38,7 +38,7 @@ public class ResourceUtil implements Serializable {
 
 	public static void addResource(String resourceName) {
     	getInstance().resources.add(ResourceBundle.getBundle(resourceName,getInstance().locale));
-    	log.info("File: " + resourceName + " loaded successfully.");
+    	log.log(Level.INFO, "File: {0} loaded successfully.", resourceName);
     }
     
 	public static String getResource(String key) {
