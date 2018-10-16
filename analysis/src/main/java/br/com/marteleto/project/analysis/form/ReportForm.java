@@ -16,45 +16,56 @@ public class ReportForm extends AInput {
 	public static final String COMPONENT_TYPE = "form.ReportForm";
 	
 	enum PropertyKeys {
-		readonly,
-		labelLbReportType,
-		labelLbJarName,
-		labelLbPom,
-		labelLbPackagePath,
+		READONLY("readonly"),
+		LABELLBREPORTTYPE("labelLbReportType"),
+		LABELLBJARNAME("labelLbJarName"),
+		LABELLBPOM("labelLbPom"),
+		LABELLBPACKAGEPATH("labelLbPackagePath"),
+		;
+		
+		private String description;
+		PropertyKeys(String description){
+			this.description = description;
+		}
+		
+		@Override
+		public String toString() {
+			return this.description;
+		}
 	}
 	
 	public boolean isReadonly() {
-		return (Boolean) getStateHelper().eval(PropertyKeys.readonly,false);
+		return (Boolean) getStateHelper().eval(PropertyKeys.READONLY,false);
 	}
 	public void setReadonly(boolean readonly) {
-		getStateHelper().put(PropertyKeys.readonly, readonly);
+		getStateHelper().put(PropertyKeys.READONLY, readonly);
 	}
 	public String getLabelLbReportType() {
-		return (String) getStateHelper().eval(PropertyKeys.labelLbReportType,this.getResourceBundleMap().get("labelLbReportType"));
+		return (String) getStateHelper().eval(PropertyKeys.LABELLBREPORTTYPE,this.getResourceBundleMap().get("labelLbReportType"));
 	}
 	public void setLabelLbReportType(String labelLbReportType) {
-		getStateHelper().put(PropertyKeys.labelLbReportType, labelLbReportType);
+		getStateHelper().put(PropertyKeys.LABELLBREPORTTYPE, labelLbReportType);
 	}
 	public boolean isAnalysisFieldsRendered() {
 		return this.getValue().getReportType().equals(ReportType.JDEPS_ANALYZE);
 	}
 	public String getLabelLbJarName() {
-		return (String) getStateHelper().eval(PropertyKeys.labelLbJarName,this.getResourceBundleMap().get("labelLbJarName"));
+		return (String) getStateHelper().eval(PropertyKeys.LABELLBJARNAME,this.getResourceBundleMap().get("labelLbJarName"));
 	}
 	public void setLabelLbJarName(String labelLbJarName) {
-		getStateHelper().put(PropertyKeys.labelLbJarName, labelLbJarName);
+		getStateHelper().put(PropertyKeys.LABELLBJARNAME, labelLbJarName);
 	}
 	public String getLabelLbPom() {
-		return (String) getStateHelper().eval(PropertyKeys.labelLbPom,this.getResourceBundleMap().get("labelLbPom"));
+		return (String) getStateHelper().eval(PropertyKeys.LABELLBPOM,this.getResourceBundleMap().get("labelLbPom"));
 	}
 	public void setLabelLbPom(String labelLbPom) {
-		getStateHelper().put(PropertyKeys.labelLbPom, labelLbPom);
+		getStateHelper().put(PropertyKeys.LABELLBPOM, labelLbPom);
 	}
 	public String getLabelLbPackagePath() {
-		return (String) getStateHelper().eval(PropertyKeys.labelLbPackagePath,this.getResourceBundleMap().get("labelLbPackagePath"));
+		return (String) getStateHelper().eval(PropertyKeys.LABELLBPACKAGEPATH,this.getResourceBundleMap().get("labelLbPackagePath"));
 	}
 	public void setLabelLbPackagePath(String labelLbPackagePath) {
-		getStateHelper().put(PropertyKeys.labelLbPackagePath, labelLbPackagePath);
+		getStateHelper().put(PropertyKeys.LABELLBPACKAGEPATH, labelLbPackagePath);
 	}
 	
 	@Override

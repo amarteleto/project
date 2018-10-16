@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.tmatesoft.svn.core.SVNException;
@@ -183,12 +184,11 @@ public class ReportRunnable implements Runnable {
     
     private void clear() {
     	progress += 5;
-    	try {
-			Files.walk(Paths.get(workspace))
-			.sorted(Comparator.reverseOrder())
-			.map(Path::toFile)
-			.forEach(File::delete);
-		} catch (IOException ex) {
+    	try (
+    		Stream<File> stream = Files.walk(Paths.get(workspace)).sorted(Comparator.reverseOrder()).map(Path::toFile);
+    	) {
+    		stream.forEach(File::delete);
+    	} catch (IOException ex) {
 			log.log(Level.SEVERE, ex.getMessage(), ex);
 		}
     	progress += 5;
